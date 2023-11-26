@@ -3,6 +3,7 @@ import { toast } from "react-hot-toast";
 import { useEffect,useState } from 'react';
 import { getTrendingMovies } from 'components/utils/getTrendingMovies';
 import Movies from "components/Movies/Movies";
+import Loader from "components/Loader/Loader";
 
 
 export default function HomePage() {
@@ -29,7 +30,7 @@ export default function HomePage() {
       }, []);
   
     return <div>      {loading ? (
-      <p>Loading...</p>
+     <Loader/>
     ) : (
       <Movies movies={movies} />
     )}</div>;

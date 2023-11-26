@@ -1,3 +1,4 @@
+import Loader from 'components/Loader/Loader';
 import Movies from 'components/Movies/Movies';
 import { SearchButton, SearchContainer, SearchInput, SearchResultsContainer } from 'components/SearchItem/SearchItem.styled';
 import searchMovies from 'components/utils/getSearchMovie';
@@ -10,6 +11,7 @@ import { useSearchParams } from 'react-router-dom';
 export default function SearchItem() {
     const [searchQuery, setsearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+    const [loading, setLoading] = useState(false);
 
 
     const [params, setParams] = useSearchParams();
@@ -25,6 +27,8 @@ export default function SearchItem() {
         setSearchResults(data.results);
       } catch (error) {
         console.error('Error fetching search results:', error);
+      } finally {
+        setLoading(false);
       }
     };
   
@@ -45,21 +49,25 @@ export default function SearchItem() {
     
   return (
     <SearchContainer>
-      <form onSubmit={handleSubmit}>
-        <SearchInput
-          type="text"
-          placeholder="Enter movie title"
-          value={searchQuery}
-          onChange={(e) => setsearchQuery(e.target.value)}
-        />
-        <SearchButton type="submit">Search</SearchButton>
-      </form>
-    {searchResults.length > 0 && (
+    <form onSubmit={handleSubmit}>
+      <SearchInput
+        type="text"
+        placeholder="Enter movie title"
+        value={searchQuery}
+        onChange={(e) => setsearchQuery(e.target.value)}
+      />
+      <SearchButton type="submit">Search</SearchButton>
+    </form>
+    {loading ? (
+      <Loader />
+    ) : (
+      searchResults.length > 0 && (
         <SearchResultsContainer>
           <h2>Search Results</h2>
           <Movies movies={searchResults} />
         </SearchResultsContainer>
-      )}
+      )
+    )}
   </SearchContainer>
   )
 }
